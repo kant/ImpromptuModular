@@ -1,6 +1,6 @@
-### 1.1.2 (2019-08-06)
+### 1.1.2 (in development)
 
-- Change "Reset when run is turned off" to "Restart when run is turned off" and offer a separate menu choice for emitting the reset pulse when this option is activated
+- Change "Reset when run is turned off" to "Restart when run is:" with a submenu with choices "turned off", "turned on" and "neither"; offer a separate menu choice for emitting the reset pulse when a restart is activated
 
 
 ### 1.1.1 (2019-08-03)

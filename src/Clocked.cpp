@@ -245,8 +245,8 @@ struct Clocked : Module {
 	bool running;
 	bool displayDelayNoteMode;
 	bool bpmDetectionMode;
-	bool restartOnStopRun;
-	bool sendResetOnStopRun;
+	int restartOnStopStartRun;// 0 = nothing, 1 = restart on stop run, 2 = restart on start run
+	bool sendResetOnRestart;
 	int ppqn;
 	bool resetClockOutputsHigh;
 
@@ -378,8 +378,8 @@ struct Clocked : Module {
 		running = true;
 		displayDelayNoteMode = true;
 		bpmDetectionMode = false;
-		restartOnStopRun = false;
-		sendResetOnStopRun = false;
+		restartOnStopStartRun = 0;
+		sendResetOnRestart = false;
 		ppqn = 4;
 		resetClockOutputsHigh = true;
 		resetNonJson(false);
@@ -445,11 +445,11 @@ struct Clocked : Module {
 		// bpmDetectionMode
 		json_object_set_new(rootJ, "bpmDetectionMode", json_boolean(bpmDetectionMode));
 		
-		// restartOnStopRun
-		json_object_set_new(rootJ, "emitResetOnStopRun", json_boolean(restartOnStopRun));
+		// restartOnStopStartRun
+		json_object_set_new(rootJ, "restartOnStopStartRun", json_integer(restartOnStopStartRun));
 		
-		// sendResetOnStopRun
-		json_object_set_new(rootJ, "sendResetOnStopRun", json_boolean(sendResetOnStopRun));
+		// sendResetOnRestart
+		json_object_set_new(rootJ, "sendResetOnRestart", json_boolean(sendResetOnRestart));
 		
 		// ppqn
 		json_object_set_new(rootJ, "ppqn", json_integer(ppqn));
@@ -482,17 +482,25 @@ struct Clocked : Module {
 		if (bpmDetectionModeJ)
 			bpmDetectionMode = json_is_true(bpmDetectionModeJ);
 
-		// restartOnStopRun
-		json_t *restartOnStopRunJ = json_object_get(rootJ, "emitResetOnStopRun");
-		if (restartOnStopRunJ)
-			restartOnStopRun = json_is_true(restartOnStopRunJ);
+		// restartOnStopStartRun
+		json_t *restartOnStopStartRunJ = json_object_get(rootJ, "restartOnStopStartRun");
+		if (restartOnStopStartRunJ) {
+			restartOnStopStartRun = json_integer_value(restartOnStopStartRunJ);
+		}
+		else {// legacy
+			// emitResetOnStopRun
+			json_t *emitResetOnStopRunJ = json_object_get(rootJ, "emitResetOnStopRun");
+			if (emitResetOnStopRunJ) {
+				restartOnStopStartRun = json_is_true(emitResetOnStopRunJ) ? 1 : 0;
+			}
+		}
 
-		// sendResetOnStopRun
-		json_t *sendResetOnStopRunJ = json_object_get(rootJ, "sendResetOnStopRun");
-		if (sendResetOnStopRunJ)
-			sendResetOnStopRun = json_is_true(sendResetOnStopRunJ);
-		else
-			sendResetOnStopRun = restartOnStopRun;
+		// sendResetOnRestart
+		json_t *sendResetOnRestartJ = json_object_get(rootJ, "sendResetOnRestart");
+		if (sendResetOnRestartJ)
+			sendResetOnRestart = json_is_true(sendResetOnRestartJ);
+		else// legacy
+			sendResetOnRestart = (restartOnStopStartRun == 1);
 
 		// ppqn
 		json_t *ppqnJ = json_object_get(rootJ, "ppqn");
@@ -525,9 +533,16 @@ struct Clocked : Module {
 			if (!(bpmDetectionMode && inputs[BPM_INPUT].isConnected()) || running) {// toggle when not BPM detect, turn off only when BPM detect (allows turn off faster than timeout if don't want any trailing beats after stoppage). If allow manually start in bpmDetectionMode   the clock will not know which pulse is the 1st of a ppqn set, so only allow stop
 				running = !running;
 				runPulse.trigger(0.001f);
-				if (!running && restartOnStopRun) {
+				if (!running && restartOnStopStartRun == 1) {
 					resetClocked(false);
-					if (sendResetOnStopRun) {
+					if (sendResetOnRestart) {
+						resetPulse.trigger(0.001f);
+						resetLight = 1.0f;
+					}
+				}
+				if (running && restartOnStopStartRun == 2) {
+					resetClocked(false);
+					if (sendResetOnRestart) {
 						resetPulse.trigger(0.001f);
 						resetLight = 1.0f;
 					}
@@ -594,6 +609,13 @@ struct Clocked : Module {
 						running = true;
 						runPulse.trigger(0.001f);
 						resetClocked(false);
+						if (restartOnStopStartRun == 2) {
+							// resetClocked(false); implicit above
+							if (sendResetOnRestart) {
+								resetPulse.trigger(0.001f);
+								resetLight = 1.0f;
+							}
+						}
 					}
 					if (running) {
 						extPulseNumber++;
@@ -615,9 +637,9 @@ struct Clocked : Module {
 					if (extIntervalTime > timeoutTime) {
 						running = false;
 						runPulse.trigger(0.001f);
-						if (restartOnStopRun) {
+						if (restartOnStopStartRun == 1) {
 							resetClocked(false);
-							if (sendResetOnStopRun) {
+							if (sendResetOnRestart) {
 								resetPulse.trigger(0.001f);
 								resetLight = 1.0f;
 							}
@@ -843,16 +865,41 @@ struct ClockedWidget : ModuleWidget {
 			module->displayDelayNoteMode = !module->displayDelayNoteMode;
 		}
 	};
-	struct RestartOnStopItem : MenuItem {
+	struct RestartOnStopStartItem : MenuItem {
 		Clocked *module;
-		void onAction(const event::Action &e) override {
-			module->restartOnStopRun = !module->restartOnStopRun;
+		
+		struct RestartOnStopStartSubItem : MenuItem {
+			Clocked *module;
+			int setVal = 0;
+			void onAction(const event::Action &e) override {
+				module->restartOnStopStartRun = setVal;
+			}
+		};
+	
+		Menu *createChildMenu() override {
+			Menu *menu = new Menu;
+
+			RestartOnStopStartSubItem *re0Item = createMenuItem<RestartOnStopStartSubItem>("turned off", CHECKMARK(module->restartOnStopStartRun == 1));
+			re0Item->module = module;
+			re0Item->setVal = 1;
+			menu->addChild(re0Item);
+
+			RestartOnStopStartSubItem *re1Item = createMenuItem<RestartOnStopStartSubItem>("turned on", CHECKMARK(module->restartOnStopStartRun == 2));
+			re1Item->module = module;
+			re1Item->setVal = 2;
+			menu->addChild(re1Item);
+
+			RestartOnStopStartSubItem *re2Item = createMenuItem<RestartOnStopStartSubItem>("neither", CHECKMARK(module->restartOnStopStartRun == 0));
+			re2Item->module = module;
+			menu->addChild(re2Item);
+
+			return menu;
 		}
 	};	
 	struct SendResetOnRestartItem : MenuItem {
 		Clocked *module;
 		void onAction(const event::Action &e) override {
-			module->sendResetOnStopRun = !module->sendResetOnStopRun;
+			module->sendResetOnRestart = !module->sendResetOnRestart;
 		}
 	};	
 	struct ResetHighItem : MenuItem {
@@ -885,23 +932,23 @@ struct ClockedWidget : ModuleWidget {
 		settingsLabel->text = "Settings";
 		menu->addChild(settingsLabel);
 		
-		DelayDisplayNoteItem *ddnItem = createMenuItem<DelayDisplayNoteItem>("Display delay values in notes", CHECKMARK(module->displayDelayNoteMode));
-		ddnItem->module = module;
-		menu->addChild(ddnItem);
-
-		RestartOnStopItem *erItem = createMenuItem<RestartOnStopItem>("Restart when run is turned off", CHECKMARK(module->restartOnStopRun));
+		RestartOnStopStartItem *erItem = createMenuItem<RestartOnStopStartItem>("Restart when run is:", RIGHT_ARROW);
 		erItem->module = module;
 		menu->addChild(erItem);
 
-		SendResetOnRestartItem *sendItem = createMenuItem<SendResetOnRestartItem>("Send reset pulse when restart", module->restartOnStopRun ? CHECKMARK(module->sendResetOnStopRun) : "");
+		SendResetOnRestartItem *sendItem = createMenuItem<SendResetOnRestartItem>("Send reset pulse when restart", module->restartOnStopStartRun != 0 ? CHECKMARK(module->sendResetOnRestart) : "");
 		sendItem->module = module;
-		sendItem->disabled = !module->restartOnStopRun;
+		sendItem->disabled = module->restartOnStopStartRun == 0;
 		menu->addChild(sendItem);
 
 		ResetHighItem *rhItem = createMenuItem<ResetHighItem>("Outputs reset high when not running", CHECKMARK(module->resetClockOutputsHigh));
 		rhItem->module = module;
 		menu->addChild(rhItem);
 		
+		DelayDisplayNoteItem *ddnItem = createMenuItem<DelayDisplayNoteItem>("Display delay values in notes", CHECKMARK(module->displayDelayNoteMode));
+		ddnItem->module = module;
+		menu->addChild(ddnItem);
+
 		menu->addChild(new MenuLabel());// empty line
 
 		MenuLabel *expLabel = new MenuLabel();
