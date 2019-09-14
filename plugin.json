@@ -8,7 +8,7 @@
 	"authorEmail": "marc.boule@etsmtl.ca",
 	"authorUrl": "",
 	"pluginUrl": "",
-	"manualUrl": "https://github.com/MarcBoule/ImpromptuModular/tree/v1#modules-",
+	"manualUrl": "https://github.com/MarcBoule/ImpromptuModular/tree/v1#modules",
 	"sourceUrl": "https://github.com/MarcBoule/ImpromptuModular/tree/v1",
 	"donateUrl": "https://www.paypal.me/marcboule",
 	"changelogUrl": "https://github.com/MarcBoule/ImpromptuModular/tree/v1/CHANGELOG.md",
@@ -17,96 +17,112 @@
 			"slug": "Tact",
 			"name": "Tact",
 			"description": "Tactile-inspired controller, dual channel",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#tact",
 			"tags": ["Controller"]
 		},
 		{
 			"slug": "Tact1",
 			"name": "Tact1",
 			"description": "Tactile-inspired controller",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#tact",
 			"tags": ["Controller"]
 		},
 		{
 			"slug": "Twelve-Key",
 			"name": "TwelveKey",
 			"description": "Chainable one octave keyboard controller",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#twelve-key",
 			"tags": ["Controller"]
 		},
 		{
 			"slug": "Clocked",
 			"name": "Clocked",
 			"description": "Chainable clock generator",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#clocked",
 			"tags": ["Clock"]
 		},
 		{
 			"slug": "Clocked-Expander",
 			"name": "Clocked expander",
 			"description": "Expander for Clocked",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#expanders",
 			"tags": ["Expander"]
 		},
 		{
 			"slug": "Foundry",
 			"name": "Foundry",
 			"description": "4-track, 32-step / 64-pattern sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#foundry",
 			"tags": ["Sequencer"]
 		},
 		{
 			"slug": "Foundry-Expander",
 			"name": "Foundry expander",
 			"description": "Expander for Foundry",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#expanders",
 			"tags": ["Expander"]
 		},
 		{
 			"slug": "Gate-Seq-64",
 			"name": "GateSeq64",
 			"description": "64-step / 32-pattern gate sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#gate-seq-64",
 			"tags": ["Sequencer"]
 		},
 		{
 			"slug": "Gate-Seq-64-Expander",
 			"name": "GateSeq64 expander",
 			"description": "Expander for GateSeq64",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#expanders",
 			"tags": ["Expander"]
 		},
 		{
 			"slug": "Phrase-Seq-16",
 			"name": "PhraseSeq16",
 			"description": "16-step / 16-pattern sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#phrase-seq-16",
 			"tags": ["Sequencer"]
 		},
 		{
 			"slug": "Phrase-Seq-32",
 			"name": "PhraseSeq32",
 			"description": "32-step / 32-pattern sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#phrase-seq-32",
 			"tags": ["Sequencer"]
 		},
 		{
 			"slug": "Phrase-Seq-Expander",
 			"name": "PhraseSeq expander",
 			"description": "Expander for PhraseSeq16/32",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#expanders",
 			"tags": ["Expander"]
 		},
 		{
 			"slug": "Write-Seq-32",
 			"name": "WriteSeq32",
 			"description": "3-channel 32-step sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#write-seq",
 			"tags": ["Sequencer"]
 		},
 		{
 			"slug": "Write-Seq-64",
 			"name": "WriteSeq64",
 			"description": "4-channel 64-step sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#write-seq",
 			"tags": ["Sequencer"]
 		},
 		{
 			"slug": "Big-Button-Seq",
 			"name": "BigButtonSeq",
 			"description": "6-channel 64-step trigger sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#big-button-seq",
 			"tags": ["Sequencer"]
 		},
 		{
 			"slug": "Big-Button-Seq2",
 			"name": "BigButtonSeq2",
 			"description": "6-channel 128-step sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#big-button-seq2",
 			"tags": ["Sequencer"]
 		},
 		{
@@ -119,6 +135,7 @@
 			"slug": "Semi-ModularSynth",
 			"name": "SemiModular Synth",
 			"description": "Semi-modular monophonic synthesizer with sequencer",
+			"manualUrl": "https://github.com/MarcBoule/ImpromptuModular#sms-16",
 			"tags": ["Synth voice"]
 		},
 		{
