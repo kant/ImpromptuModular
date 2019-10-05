@@ -1135,11 +1135,14 @@ struct ClockedWidget : ModuleWidget {
 	
 	void onHoverKey(const event::HoverKey& e) override {
 		if (e.action == GLFW_PRESS) {
-			if (e.key >= GLFW_KEY_SPACE) {
+			if ( e.key == GLFW_KEY_SPACE && ((e.mods & RACK_MOD_MASK) == 0) ) {
 				Clocked *module = dynamic_cast<Clocked*>(this->module);
 				module->toggleRun();
+				e.consume(this);
+				return;
 			}
 		}
+		ModuleWidget::onHoverKey(e); 
 	}
 };
 
