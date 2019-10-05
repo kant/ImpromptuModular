@@ -515,6 +515,30 @@ struct Clocked : Module {
 		resetNonJson(true);
 	}
 
+	void toggleRun(void) {
+		if (!(bpmDetectionMode && inputs[BPM_INPUT].isConnected()) || running) {// toggle when not BPM detect, turn off only when BPM detect (allows turn off faster than timeout if don't want any trailing beats after stoppage). If allow manually start in bpmDetectionMode   the clock will not know which pulse is the 1st of a ppqn set, so only allow stop
+			running = !running;
+			runPulse.trigger(0.001f);
+			if (!running && restartOnStopStartRun == 1) {
+				resetClocked(false);
+				if (sendResetOnRestart) {
+					resetPulse.trigger(0.001f);
+					resetLight = 1.0f;
+				}
+			}
+			if (running && restartOnStopStartRun == 2) {
+				resetClocked(false);
+				if (sendResetOnRestart) {
+					resetPulse.trigger(0.001f);
+					resetLight = 1.0f;
+				}
+			}
+		}
+		else {
+			cantRunWarning = (long) (0.7 * sampleRate / RefreshCounter::displayRefreshStepSkips);
+		}
+	}
+
 	
 	void onSampleRateChange() override {
 		resetClocked(false);
@@ -530,26 +554,7 @@ struct Clocked : Module {
 		
 		// Run button
 		if (runTrigger.process(params[RUN_PARAM].getValue() + inputs[RUN_INPUT].getVoltage())) {// no input refresh here, don't want to introduce clock skew
-			if (!(bpmDetectionMode && inputs[BPM_INPUT].isConnected()) || running) {// toggle when not BPM detect, turn off only when BPM detect (allows turn off faster than timeout if don't want any trailing beats after stoppage). If allow manually start in bpmDetectionMode   the clock will not know which pulse is the 1st of a ppqn set, so only allow stop
-				running = !running;
-				runPulse.trigger(0.001f);
-				if (!running && restartOnStopStartRun == 1) {
-					resetClocked(false);
-					if (sendResetOnRestart) {
-						resetPulse.trigger(0.001f);
-						resetLight = 1.0f;
-					}
-				}
-				if (running && restartOnStopStartRun == 2) {
-					resetClocked(false);
-					if (sendResetOnRestart) {
-						resetPulse.trigger(0.001f);
-						resetLight = 1.0f;
-					}
-				}
-			}
-			else
-				cantRunWarning = (long) (0.7 * sampleRate / RefreshCounter::displayRefreshStepSkips);
+			toggleRun();
 		}
 
 		// Reset (has to be near top because it sets steps to 0, and 0 not a real step (clock section will move to 1 before reaching outputs)
@@ -1126,6 +1131,15 @@ struct ClockedWidget : ModuleWidget {
 			darkPanel->visible  = ((((Clocked*)module)->panelTheme) == 1);
 		}
 		Widget::step();
+	}
+	
+	void onHoverKey(const event::HoverKey& e) override {
+		if (e.action == GLFW_PRESS) {
+			if (e.key >= GLFW_KEY_SPACE) {
+				Clocked *module = dynamic_cast<Clocked*>(this->module);
+				module->toggleRun();
+			}
+		}
 	}
 };
 
