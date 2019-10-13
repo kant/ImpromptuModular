@@ -621,3 +621,4 @@ Here are a few videos featuring Impromptu Modular, which I find particularly ver
 
 * **John Melcher**, [Steppes](https://www.youtube.com/watch?v=ruo4s_Hyhrw)
 
+* **Lars Bjerregaard**, [Intertwined](https://www.youtube.com/watch?v=Xt9zOsVQUHc)
