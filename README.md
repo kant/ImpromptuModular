@@ -1,3 +1,5 @@
+# Impromptu Modular
+
 ![IM](res/img/Blank.jpg)
 
 Modules for [VCV Rack](https://vcvrack.com), available in the [plugin manager](https://vcvrack.com/plugins.html).
