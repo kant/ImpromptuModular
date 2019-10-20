@@ -3,7 +3,7 @@
 //
 //Based on code from the Fundamental and Audible Instruments plugins by Andrew Belt and graphics  
 //  from the Component Library by Wes Milholen. 
-//See ./LICENSE.txt for all licenses
+//See ./LICENSE.md for all licenses
 //See ./res/fonts/ for font licenses
 //
 //***********************************************************************************************
@@ -231,9 +231,9 @@ struct Tact : Module {
 			float newParamValue = params[TACT_PARAMS + i].getValue();
 			if (newParamValue != cv[i]) {
 				newParamValue = clamp(newParamValue, 0.0f, 10.0f);// legacy for when range was -1.0f to 11.0f
-				double transitionRate = params[RATE_PARAMS + i].getValue() * rateMultiplier; // s/V
+				double transitionRate = std::max(0.001, (double)params[RATE_PARAMS + i].getValue() * rateMultiplier); // s/V
 				double dt = args.sampleTime;
-				if ((newParamValue - cv[i]) > 0.001f && transitionRate > 0.001) {
+				if ((newParamValue - cv[i]) > 0.001f) {
 					double dV = expSliding ? (cv[i] + 1.0) * (pow(11.0, dt / (10.0 * transitionRate)) - 1.0) : dt/transitionRate;
 					double newCV = cv[i] + dV;
 					if (newCV > newParamValue) {
@@ -243,7 +243,7 @@ struct Tact : Module {
 					else
 						cv[i] = (float)newCV;
 				}
-				else if ((newParamValue - cv[i]) < -0.001f && transitionRate > 0.001) {
+				else if ((newParamValue - cv[i]) < -0.001f) {
 					dt *= -1.0;
 					double dV = expSliding ? (cv[i] + 1.0) * (pow(11.0, dt / (10.0 * transitionRate)) - 1.0) : dt/transitionRate;
 					double newCV = cv[i] + dV;
@@ -630,9 +630,9 @@ struct Tact1 : Module {
 		float newParamValue = params[TACT_PARAM].getValue();
 		if (newParamValue != cv) {
 			newParamValue = clamp(newParamValue, 0.0f, 10.0f);// legacy for when range was -1.0f to 11.0f
-			double transitionRate = params[RATE_PARAM].getValue() * rateMultiplier; // s/V
+			double transitionRate = std::max(0.001, (double)params[RATE_PARAM].getValue() * rateMultiplier); // s/V
 			double dt = args.sampleTime;
-			if ((newParamValue - cv) > 0.001f && transitionRate > 0.001) {
+			if ((newParamValue - cv) > 0.001f) {
 				double dV = isExpSliding() ? (cv + 1.0) * (pow(11.0, dt / (10.0 * transitionRate)) - 1.0) : dt/transitionRate;
 				double newCV = cv + dV;
 				if (newCV > newParamValue)
@@ -640,7 +640,7 @@ struct Tact1 : Module {
 				else
 					cv = (float)newCV;
 			}
-			else if ((newParamValue - cv) < -0.001f && transitionRate > 0.001) {
+			else if ((newParamValue - cv) < -0.001f) {
 				dt *= -1.0;
 				double dV = isExpSliding() ? (cv + 1.0) * (pow(11.0, dt / (10.0 * transitionRate)) - 1.0) : dt/transitionRate;
 				double newCV = cv + dV;

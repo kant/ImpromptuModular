@@ -2,7 +2,7 @@
 //Impromptu Modular: Modules for VCV Rack by Marc Boulé
 //
 //This is code from the Fundamental plugin by Andrew Belt 
-//See ./LICENSE.txt for all licenses
+//See ./LICENSE.md for all licenses
 //***********************************************************************************************
 
 

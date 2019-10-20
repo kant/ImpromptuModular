@@ -1,7 +1,7 @@
 //***********************************************************************************************
 //Impromptu Modular: Modules for VCV Rack by Marc BoulĂ©
 //
-//See ./LICENSE.txt for all licenses
+//See ./LICENSE.md for all licenses
 //***********************************************************************************************
 
 #ifndef IM_PIANOKEY_HPP

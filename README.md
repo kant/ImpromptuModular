@@ -60,7 +60,7 @@ For sequencers and clock modules, it is advisable to have a core audio module ad
 
 ## License
 
-Based on code from the Fundamental and Audible Instruments plugins by Andrew Belt and graphics from the Component Library by Wes Milholen. See ./LICENSE.md for all licenses (and ./res/fonts/ for font licenses).
+Based on code from the Fundamental and Audible Instruments plugins by Andrew Belt and graphics from the Component Library by Wes Milholen. See ./LICENSE.md for licenses (and ./res/fonts/ for font licenses).
 
 
 ## Acknowledgements

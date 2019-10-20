@@ -2,7 +2,7 @@
 //Impromptu Modular: Modules for VCV Rack by Marc Boulé
 //
 //This is code from the Fundamental plugin by Andrew Belt 
-//See ./LICENSE.txt for all licenses and see below for the filter code license
+//See ./LICENSE.md for all licenses
 //***********************************************************************************************
 
 #ifndef FUNDAMENTAL_UTIL_HPP
@@ -10,10 +10,6 @@
 
 
 #include "rack.hpp"
-// #include "dsp/functions.hpp"
-// #include "dsp/resampler.hpp"
-// #include "dsp/ode.hpp"
-// #include "dsp/filter.hpp"
 #include "ImpromptuModular.hpp"
 
 

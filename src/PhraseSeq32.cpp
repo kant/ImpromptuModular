@@ -3,7 +3,7 @@
 //
 //Based on code from the Fundamental and AudibleInstruments plugins by Andrew Belt 
 //and graphics from the Component Library by Wes Milholen 
-//See ./LICENSE.txt for all licenses
+//See ./LICENSE.md for all licenses
 //See ./res/fonts/ for font licenses
 //
 //Module inspired by the SA-100 Stepper Acid sequencer by Transistor Sounds Labs

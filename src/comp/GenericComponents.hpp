@@ -1,7 +1,7 @@
 //***********************************************************************************************
 //Impromptu Modular: Modules for VCV Rack by Marc Boulé
 //
-//See ./LICENSE.txt for all licenses
+//See ./LICENSE.md for all licenses
 //***********************************************************************************************
 
 #ifndef IM_GENERICCOMP_HPP
