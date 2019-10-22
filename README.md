@@ -52,7 +52,7 @@ Details about each module are given in the links above, and a feature comparison
 | Slide						| No 				| Global		| Global		| -					| Per step		| - / No		|
 | Edit while runnning		| Gates only 		| Yes 			| Yes			| Yes				| Yes			| Yes			|
 
-\* Configuration is noted as follows: Channels/Tracks x Sequence-Length. The distinction between channels and tracks relates to clock inputs: when channles are separately clockable they are referred to as tracks.
+\* Configuration is noted as follows: Channels/Tracks x Sequence-Length. The distinction between channels and tracks relates to clock inputs: when channels are separately clockable they are referred to as tracks.
 
 ## Known issues <a id="known-issues"></a>
 For sequencers and clock modules, it is advisable to have a core audio module added to your patch and assigned to a sound device in order for the timing and response delays in the user interface to be of the proper duration. This is a [known artifact](https://github.com/VCVRack/Rack/issues/919) in VCV Rack.
